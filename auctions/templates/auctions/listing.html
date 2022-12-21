@@ -1,0 +1,79 @@
+{% extends "auctions/layout.html" %}
+{% block title %}
+{{ listing.name }}
+{% endblock %}
+{% block body %}
+    <img href="{{ listing.image }}">
+    <h4>{{ listing.name }}</h4>
+    <h5>{{ listing.description }}</h5>
+    <p>Category: {{ listing.category }}</p>
+    {% if listing.closed %}
+    {% if user.username == bidder %}
+    <p>You won for ${{ bid }}!</p>
+    {% else %}
+    <p>{{ bidder }} won for ${{ bid }}</p>
+    {% endif %}
+    {% else %}
+    {% if bid %}
+    <p>Highest Bid: ${{ bid }}</p>
+    <p>Highest bidder: {{ bidder }}</p>
+    {% else %}
+    <p>Price: ${{ listing.price }}</p>
+    {% endif %}
+    {% if watchlist %}
+    <form action="{% url 'remove' %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="listing" value="{{ listing.id }}" style="display: none;">
+        <input type="text" name="user" value="{{ user.id  }}" style="display: none;">
+        <input class="btn btn-primary" type="submit" value="Remove from Watchlist">
+    </form>
+    {% else %}
+    <form action="{% url 'watchlist' %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="listing" value="{{ listing.id }}" style="display: none;">
+        <input type="text" name="user" value="{{ user.id  }}" style="display: none;">
+        <input class="btn btn-primary" type="submit" value="Add to Watchlist">
+    </form>
+    {% endif %}
+    <hr>
+    {% if user.id == listing.user.id %}
+    <form action="{% url 'close' listing.name %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Close Auction">
+    </form>
+    {% else %}
+    <form action="{% url 'bid' listing.name %}" method="post">
+        <h4>Place Bid</h4>
+        {% csrf_token %}
+        <div class="mb-3 col-4">
+            <input class="form-control" type="text" name="bid" placeholder="Place Bid">
+        </div>
+        <input type="text" name="id" value="{{ user.id }}" style="display: none;">
+        <div class="mb-3">
+            <input class="btn btn-secondary" type="submit" value="Place Bid">
+        </div>
+    </form>
+    {% endif %}
+    <p>Created {{ listing.date_created }}</p>
+    {% endif %}
+    <hr>
+    <h4>Comments</h4>
+    <h6>{{ user.username }}</h6>
+    <form action="{% url 'comment' listing.name %}" method="post">
+        {% csrf_token %}
+        <div class="mb-3 col-4">
+            <textarea type="text" name="comment" placeholder="Add a comment..."></textarea>
+        </div>
+        <div class="mb-3">
+            <input class="btn btn-secondary" type="submit" value="Submit Comment">
+        </div>
+    </form>
+    <hr>
+    {% if comments %}
+    {% for comment in comments %}
+    <h6>{{ comment.user }}</h6>
+    <p>{{ comment.comment }}</p>
+    <p>{{ comment.date }}</p>
+    {% endfor %}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,35 @@
+body {
+    padding: 10px;
+}
+
+.listing {
+    display: block;
+    border: 1px grey solid;
+    max-height: 252px;
+    border-radius: 10px;
+    margin: 25px 0px;
+}
+
+.listing-image {
+    display: inline-block;
+    width: 40%;
+    height: 250px;
+    text-align: center;
+    vertical-align: bottom;
+}
+
+.listing-info {
+    display: inline-block;
+    vertical-align: top;
+    width: 58%;
+}
+
+img {
+    max-height: 250px;
+    max-width: 300px;
+}
+
+.description {
+    height: 90px;
+    overflow: auto;
+}

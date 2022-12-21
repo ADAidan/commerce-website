@@ -1,0 +1,41 @@
+{% extends "auctions/layout.html" %}
+{% block title %}
+Categories
+{% endblock %}
+{% block body %}
+{% if category %}
+    <h2>Results for category: {{ category }}</h2>
+    <hr>
+    {% for listing in listings %}
+    {% if listing.closed %}
+    {% else %}
+    <a href="{% url 'listing' listing.name %}" class="listing">
+        <div class="listing-image">
+            {% if listing.image %}
+            <img src="{{ listing.image }}">
+            {% else %}
+            <p>No Image.</p>
+            {% endif %}
+        </div>
+        <div class="listing-info">
+            <h4>{{ listing.name }}</h4>
+            <h5>{{ listing.description }}</h5>
+            <p>Price: ${{ listing.price }}</p>
+            <p>Category: {{ listing.category }}</p>
+            <p>Created {{ listing.date_created }}</p>
+        </div>
+        <hr>
+    </a>
+    {% endif %}
+    {% endfor %}
+{% else %}
+<h5>Categories</h5>
+<ul>
+{% for category in categories %}
+    <li>
+        <a href="{% url 'category' category %}">{{ category }}</a>
+    </li>
+{% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
